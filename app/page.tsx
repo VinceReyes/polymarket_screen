@@ -39,6 +39,17 @@ type RenderResult = {
   series?: { id: string; name: string; color: string; yesPrice: number; points: number }[];
 };
 
+type RenderJobStart = {
+  jobId: string;
+  statusUrl: string;
+};
+
+type RenderJobPoll = {
+  status: 'queued' | 'running' | 'done' | 'error';
+  error?: string;
+  result?: RenderResult;
+};
+
 const INTERVALS: { id: Interval; label: string }[] = [
   { id: '1h', label: '1 Hour' },
   { id: '6h', label: '6 Hours' },
@@ -167,9 +178,28 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Render failed');
-      setResult(json);
+      const start = (await res.json()) as RenderJobStart & { error?: string };
+      if (!res.ok) throw new Error(start.error || 'Failed to start render');
+
+      const startedAt = Date.now();
+      while (true) {
+        if (Date.now() - startedAt > 5 * 60 * 1000) {
+          throw new Error('Render timed out. Please try again.');
+        }
+
+        const pollRes = await fetch(start.statusUrl, { cache: 'no-store' });
+        const poll = (await pollRes.json()) as RenderJobPoll;
+        if (!pollRes.ok) throw new Error(poll.error || 'Render status check failed');
+
+        if (poll.status === 'done' && poll.result) {
+          setResult(poll.result);
+          break;
+        }
+        if (poll.status === 'error') {
+          throw new Error(poll.error || 'Render failed');
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
