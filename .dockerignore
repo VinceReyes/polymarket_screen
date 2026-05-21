@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.gitignore
+.DS_Store
+*.log
+.env*
+fly.toml
+Dockerfile
+.dockerignore
+public/renders
+README.md

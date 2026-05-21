@@ -1,0 +1,27 @@
+{
+  "name": "polymarket_screen",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "studio": "remotion studio remotion/index.ts"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.405",
+    "@remotion/google-fonts": "^4.0.405",
+    "@remotion/renderer": "4.0.405",
+    "next": "15.5.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.405"
+  },
+  "devDependencies": {
+    "@remotion/cli": "4.0.405",
+    "@types/node": "22.10.5",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "typescript": "5.7.3"
+  }
+}
