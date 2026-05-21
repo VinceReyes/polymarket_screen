@@ -1,21 +1,24 @@
-# Rename `app` to whatever unique slug you pick when you run `fly launch`
-# (Fly will rewrite this line for you if you let it.)
-app = "polymarket-screen"
-primary_region = "iad"
+# fly.toml app configuration file generated for polymarket-screen-morning-thunder-9774 on 2026-05-21T22:43:33Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'polymarket-screen-morning-thunder-9774'
+primary_region = 'iad'
 
 [build]
 
+[[mounts]]
+  source = 'renders'
+  destination = '/app/public/renders'
+
 [http_service]
-  internal_port = 3000
+  internal_port = 8080
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
 
 [[vm]]
-  size = "shared-cpu-2x"
-  memory = "2gb"
-
-[[mounts]]
-  source = "renders"
-  destination = "/app/public/renders"
+  size = 'shared-cpu-2x'
+  memory = '2gb'
